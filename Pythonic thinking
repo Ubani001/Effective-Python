@@ -1,0 +1,422 @@
+import sys
+
+print(sys.version_info)
+
+print(sys.version)
+
+
+#Pythonic Thinking, Difference between bytes and str.....
+
+a = b'h\65llo'
+print(list(a))
+print(a)
+
+a = 'a\u0300 propos'
+print(list(a))
+print(a)
+
+#Encoding and Decoding of Bytes and Str.. (Unicode Sandwich)
+#first instance takes str to bytes
+def to_str(bytes_or_str):
+    if isinstance(bytes_or_str, bytes):
+        value = bytes_or_str.decode('utf-8')
+    else:
+        value = bytes_or_str
+        return value #instance of str
+print(repr(to_str(b'foo')))
+print(repr(to_str('bar')))
+
+#Second instamce returns a byte
+
+def to_bytes(bytes_or_str):
+    if isinstance(bytes_or_str, str):
+        value = bytes_or_str.encode('utf-8')
+    else:
+        value = bytes_or_str
+        return value #instance of bytes
+print(repr(to_bytes(b'foo')))
+print(repr(to_bytes('bar')))
+
+print(b'one' + b'two')
+
+assert b'red' > b'blue'
+
+print(4)
+print('4') 
+
+d = 6
+e = 8  
+f = e < d
+print(f)
+
+# i did not get this, i was told to use 
+# print(locale.getpreferredencoding(())') i still didn't get it
+#with open('data.bin', 'r', encoding='cp1252') as f:
+ #   data = f.read()
+ 
+ #formatting strings "%d"
+ 
+a = 0b10111011
+b = 0xc5f
+print('Binary is %d, hex is %d' % (a,b))
+
+#C style format string
+key = 'my_var'
+value = 1.234
+formatted = '%-10s = %.2f' % (key, value)
+print(formatted)
+
+#kiitchen pantry, tuples []
+
+pantry = [
+    ('avocados', 1.25),
+    ('bananas', 2.5),
+    ('cherries', 15),
+]
+for i, (item, count) in enumerate(pantry):
+    print('#%d: %-10s = %.2f' % (i, item, count))
+
+pantry = [
+    ('avocados', 1.25),
+    ('bananas', 2.5),
+    ('cherries', 15),    ]
+
+for i, (item, count) in enumerate(pantry):
+    print('#%d: %-10s = %d' % (
+        i + 1,
+        item.title(),
+        round(count)
+    ))    
+    
+    #third example of formatting expression
+    
+    template = '%s loves food. See %s cook.'
+    name = 'Max'
+    formatted = template % (name, name)
+    print(formatted)
+    
+    name = 'john'
+    formatted = template % (name.title(), name.title())
+    print(formatted)
+    
+#Dictionaries in formatting expressions
+
+soup = 'lentii'
+formatted = 'Today\'s soup is %(soup)s.' % {'soup': soup}
+print(formatted)
+    
+menu = {
+    'soup': 'lentil',
+    'oyster': 'kumamoto',
+    'special': 'schnitzel',
+        
+}
+template = ('Today\'s soup is %(soup)s,'
+            'buy one get %(oyster)s oysters,'
+            'and our special entree is %(special)s.'
+            )
+formatted = template % menu
+print(formatted)
+
+template = '%s loves food'
+name = 'bash'
+formatted = template % (name)
+print(formatted)
+
+#new formattin with python 3 'a' for thousand seperator
+a = 1234.5678
+formatted = format(a, ',.2f')
+print(formatted)
+
+b = 'my string'
+formatted = format(b, '^20s')
+print('*', formatted, '*')
+
+#wite helper functions instead of complex expressions. Helps to single line of 
+# expression with a lot of logic 
+from urllib.parse import parse_qs
+my_values = parse_qs('red=5&blue=0&green=',
+                     keep_blank_values=True)
+print(repr(my_values))
+                     
+print('red: ', my_values.get('red'))
+print('blue:    ', my_values.get('blue'))
+print('opacity: ', my_values.get('opacity'))
+
+red = my_values.get('red', [''])[0] or 0
+green = my_values.get('green', [''])[0] or 0
+opacity = my_values.get('opacity', [''])[0] or 0
+
+print(f'Red:    {red!r}')
+print(f'Green:  {green!r}')
+print(f'opacity:    {opacity!r}')
+
+#Prefer Multiple Assignment Unpacking Over Indexing
+
+snack_calories = {
+    
+    
+    'chips': 140,
+    'popcorn': 80,
+    'nuts': 190,
+}
+items = tuple(snack_calories.items())
+print(items)
+
+#The values in tuples can be accessed through numerical indexes:
+
+item = ('peanut butter', 'jelly')
+first = item[0]
+second = item[1]
+print(first, 'and', second)
+
+item = ('yam', 'beans')
+first, second = item
+print(item)
+
+#DAY 2
+#Unpacking, not avisable to use in your codes
+
+favorite_snacks = {
+    'salty':    ('pretzels', 100),
+    'sweet':    ('cookies', 180),
+    'veggie':   ('carrots', 20),
+}
+((type1, (name1, cals1)),
+ (type2, (name2, cals2)),
+ (type3, (name3, cals3))
+ ) = favorite_snacks.items()
+
+print(f'Favorite {type1} is {name1} with {cals1} calories')
+print(f'Favorite {type2} is {name2} with {cals2} calories')
+print(f'Favorite {type3} is {name3} with {cals3} calories')
+
+#Unpacking can be used to swap values
+
+def bubble_sort(a):
+    for _ in range(len(a)):
+        for i in range(1, len(a)):
+            if a[i] < a[i-1]:
+                temp = a[i]
+                a[i] = a[i-1]
+                a[i-1] = temp        
+names = ['pretezls', 'carrots', 'arugula', 'bacon']
+bubble_sort(names)
+print(names)
+
+def bubble_sort(a):
+    for _ in range(len(a)):
+        if a[i] < a[i-1]:
+            a[i-1], a[i] = a[i], a[i-1]
+names = ['pere', 'jane', 'ben', 'kane']
+bubble_sort(names)
+print(names)
+
+##iteration of unacking without unpacking
+snacks = [('bacon', 350), ('donut', 240), ('muffin', 190)]
+for i in range(len(snacks)):
+    item = snacks[i]
+    name = item[0]
+    calories = item[1]
+    print(f'#{i+1}: {name} has {calories} calories')
+
+#unpacking using the enumerate built-in function
+
+snack = [('popcorn', 500), ('buns', 400), ('pie', 600)]
+for rank, (name, calories) in enumerate(snack, 1):
+    print(f'#{rank}: {name} has {calories} calories')
+    
+#python has a special syntax called unpacking for assigning multiple values in as ingle statement
+#it also reducd visual noise
+
+#PREFER ENUMERATE OVER RANGE
+#the range built-in function is useful for loop that iterate iver a set of integers
+
+from random import randint
+
+random_bits = 0
+for i in range(32):
+    if randint(0,1):
+        random_bits |= 1 << i
+        
+print(bin(random_bits))
+
+#iterating over strings
+
+flavor_list = ['vanilla', 'chocolate', 'pecan', 'strawberry']
+for flavor in flavor_list:
+    print(f'{flavor} is dellicious')
+
+#printing the rank of my favorite ice cream flavor
+
+for i in range(len(flavor_list)):
+    flavor = flavor_list[i]
+    print(f'{i + 1}: {flavor}')
+    
+it = enumerate(flavor_list)
+print(next(it))
+print(next(it))
+
+#for multiple unpacking
+
+for i, flavor in enumerate(flavor_list):
+    print(f'{i+1}: {flavor}')
+
+for i, flavor in enumerate(flavor_list, 1):
+    print(f'{i}: {flavor}')
+    
+#summary? enumerate provide concise syntax
+#USE ZIP TO PROCESS ITERATORS N PARALLEL
+
+names =  ['cecilia', 'Lise', 'Marie']
+counts = [len(n) for n in names]
+print(counts)
+
+#iterate ove the list
+
+longest_name = None
+max_count = 0
+
+for i in range(len(names)):
+    count = counts[i]
+    if count > max_count:
+        longest_name = names[i]
+        max_count = count
+print(longest_name)
+
+for i in range(len(names)):
+    count = counts[i]
+    if count < max_count:
+        shortest_name = names[i]
+        max_count = count
+print(shortest_name)
+
+for i, name in enumerate(names):
+    count = counts[i]
+    if count > max_count:
+        longest_name = name
+        max_count = count
+print(name)
+
+#codes are too noisy, python provides the zip built in function
+
+for name, count in zip(names, counts):
+    if count > max_count:
+        longest_name = name
+        max_count = count
+print(name)
+
+names.append('rosemary')
+for name, count in zip(names, counts):
+    print(name)
+    
+#But in many other cases, the truncating behavior of zip is surprising
+#and bad. If you don’t expect the lengths of the lists passed to zip to
+#be equal, consider using the zip_longest function from the itertools
+#built-in module instead
+
+import itertools
+
+for name, count in itertools.zip_longest(names, counts):
+    print(f'{name}: {count}')
+    
+#AVOID ELSE BLOCKS AFTR FOR AND WHILE LOOPS
+
+for i in range(3):
+    print('Loop', i)
+    break
+else:
+    print('Else block!')
+    
+#using the break statement 
+for i in range(3):
+    print('Loop', i)
+    if i == 3:
+        break
+else:
+    print('Else block')
+    
+#else block also runs in an empty sequence
+
+for x in []:
+    print('Never runs')
+else:
+    print('for Else Block')
+    
+#to check weather two nu,bers are coprime
+
+a  = 4
+b  = 9
+for i in range(2, min(a,b) + 1):
+    print('Testing', i)
+    if a % i == 0 and b % i == 0:
+        print('Not coprime')
+        break
+else:
+    print('Coprime')
+    
+#Alternatively 
+def coprime(a,b):
+    for i in range(2, min(a,b) + 1):
+        if a % i == 0 and b % i == 0:
+            return False
+    return True
+
+#The second way is to have a result variable that indicates whether I’ve
+#found what I’m looking for in the loop. I break out of the loop as soon
+#as I find something:
+
+def coprime_alternate(a, b):
+    is_coprime = True
+    for i in range(2, min(a,b) + 1):
+        if a % i == 0 and b % i == 0:
+            is_coprime = False
+            break
+    return is_coprime
+
+# prevent repetition with assignment exprssion
+#content of the fruit jar defined
+fresh_fruit = {
+    'apple': 10,
+    'banana': 8,
+    'lemon': 5,
+}
+def make_lemonade(count):
+    ...
+    
+def out_of_stocks():
+    ...
+    
+count = fresh_fruit.get('lemon', 0)
+if count:
+    make_lemonade(count)
+else:
+    out_of_stocks() 
+    
+def make_cider(count):
+    ...
+count = fresh_fruit.get('apple', 0)
+if count >= 4:
+    make_cider(count)
+else:
+    out_of_stocks()
+
+def slice_bananas(count):
+    ...
+class OutOfBananas(Exception):
+    pass
+
+def make_smoothies(count):
+    ...
+    
+pieces = 0
+count = fresh_fruit.get('bananas', 0)
+if count >= 2:
+    pieces = slice_bananas(count)
+else:
+    pieces = 0
+try:
+    smoothies = make_smoothies(pieces)
+except OutOfBananas:
+    out_of_stocks()
+    
